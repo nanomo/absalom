@@ -127,7 +127,7 @@ def markup(avg):
     mask = np.zeros((res.shape[0], res.shape[1]), np.uint8)
 
     #for thres in [192, 160, 128, 64, 32, 20]:
-    for thres in [32]:
+    for thres in [192, 160, 128, 64, 32, 20]:
         img = copy.deepcopy(res)
         #img = cv2.blur(img, (3,3))
         ret, img = cv2.threshold(img, thres, 255, cv2.THRESH_BINARY)
@@ -151,13 +151,14 @@ def markup(avg):
 
         # display result
         if True == True:
-            img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-            for i in xrange(0, img.shape[0]):
-                for j in xrange(0, img.shape[1]):
+            output = cv2.equalizeHist(avg)
+            output = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+            for i in xrange(0, output.shape[0]):
+                for j in xrange(0, output.shape[1]):
                     if mask[i][j] > 0: #for contour
-                        img[i][j] = (0, 0, 255)
+                        output[i][j] = (0, 0, 255)
             cv2.namedWindow("Image")
-            cv2.imshow("Image", img)
+            cv2.imshow("Image", output)
             cv2.waitKey(0)
 
     return mask
@@ -205,9 +206,7 @@ if __name__ == '__main__':
 #    avg = cv2.imread('DEV00057_IR_2017-07-07_18-42-00-339.jpg', cv2.CV_LOAD_IMAGE_GRAYSCALE)
 
     marked = markup(avg)
-    cv2.imwrite('marked.bmp', marked)
 
-#    img = cv2.imread('avg.bmp')
 #    img = cv2.resize(img, (768, 576), interpolation=cv2.INTER_CUBIC)
 ##    img = np.zeros((img.shape[0], img.shape[1]), np.uint8)
 #    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -221,4 +220,5 @@ if __name__ == '__main__':
 #    cv2.imshow("Image", img)
 #    cv2.waitKey(0)
 
+    market = cv2.imread('avg.bmp', cv2.CV_LOAD_IMAGE_GRAYSCALE)
     gen_model(marked)
